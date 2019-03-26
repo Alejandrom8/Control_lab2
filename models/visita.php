@@ -1,9 +1,7 @@
 <?php
 
   class Visita{
-    public $dia;
-    public $mes;
-    public $year;
+    public $fecha;
     public $hora;
     public $no_copias;
   }

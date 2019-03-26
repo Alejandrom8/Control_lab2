@@ -10,7 +10,7 @@ botones.forEach(boton => {
     // const confirm = window.confirm("¿Deseas eliminar al alumno " + matricula + " ? ");
     // if(confirm){
     //   //solicitud ajax
-      httpRequest("http://localhost/proyectos/control_lab/consulta/terminar/" + matricula + "/" + nombre, function(){
+      httpRequest("http://localhost/proyectos/control-lab/consulta/terminar/" + matricula + "/" + nombre, function(){
         console.log(this.responseText);
         document.querySelector("#Respuesta").innerHTML = this.responseText;
         const tbody = document.querySelector("#tbody-alumnos");

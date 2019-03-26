@@ -29,8 +29,8 @@
           </div>
           <div class="col-sm-6 botones">
             <ul>
-              <li id="btn_salir"><a class="btn btn-danger" href="<?php echo constant('URL'); ?>salir">Cerrar Sesion</a></li>
-              <li id="btn_fin"><a class="btn btn-warning" href="<?php echo constant('URL'); ?>salir">Finalizar</a></li>
+              <li id="btn_salir"><a class="btn btn-danger" href="<?php echo constant('URL'); ?>salir/salir">Cerrar Sesion</a></li>
+              <li id="btn_fin"><a class="btn btn-warning" href="<?php echo constant('URL'); ?>salir/finalizar">Finalizar</a></li>
             </ul>
           </div>
         </div>

@@ -1,13 +1,13 @@
 <?php
   setlocale(LC_TIME, "es_MX.UTF-8");
   date_default_timezone_set("America/Mexico_City");
-  define('URL', 'http://localhost/proyectos/control_lab/');
+  define('URL', 'http://localhost/proyectos/control-lab/');
 
   define('HOST', 'localhost');
   define('DB', 'control');
   define('DB2', 'califica');
   define('USER', 'root');
-  define('PASSWORD', '');
+  define('PASSWORD', 'A_lex 123');
   define('CHARSET', 'utf8');
 
   //tablas

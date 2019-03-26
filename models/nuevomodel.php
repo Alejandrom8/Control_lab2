@@ -17,9 +17,7 @@
 
           $matricula = $datos['matricula'];
           $nombre = $datos['nombre'];
-          $dia = $datos['dia'];
-          $mes = $datos['mes'];
-          $year = $datos['year'];
+          $fecha = $datos['fecha'];
           $hora = $datos['hora'];
           $tipo_usuario = $datos['tipo_usuario'];
           $id_aula = $_SESSION['id'];
@@ -37,9 +35,9 @@
 
           //insertando los datos
           if($tipo_usuario == 1){
-            $sql = "INSERT INTO visitas_" . $_SESSION['id'] . "(matricula, id_aula, nombre, tipo, dia, mes, year, hora, no_copias, no_visita, session) VALUE('$matricula', '$id_aula','$nombre', '$tipo_usuario','$dia', '$mes', '$year', '$hora', 0, 0, 0)";
+            $sql = "INSERT INTO visitas_" . $_SESSION['id'] . "(matricula, id_aula, nombre, tipo, fecha, hora, no_copias, no_visita, session) VALUE('$matricula', '$id_aula','$nombre', '$tipo_usuario','$fecha', '$hora', 0, 0, 0)";
           }else{
-              $sql = "INSERT INTO visitas_" . $_SESSION['id'] . "(matricula, id_aula, nombre, tipo, dia, mes, year, hora, no_copias, no_visita) VALUE('$matricula', '$id_aula','$nombre', '$tipo_usuario','$dia', '$mes', '$year', '$hora', 0, 0)";
+              $sql = "INSERT INTO visitas_" . $_SESSION['id'] . "(matricula, id_aula, nombre, tipo, fecha, hora, no_copias, no_visita) VALUE('$matricula', '$id_aula','$nombre', '$tipo_usuario','$fecha', '$hora', 0, 0)";
           }
           $query = $this->con->prepare($sql);
           $query->execute();

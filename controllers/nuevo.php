@@ -22,10 +22,7 @@
       date_default_timezone_set("America/Mexico_City");
 
       //fecha
-      $dia = strftime("%d");
-      $mes = strftime("%m");
-      $year = strftime("%y");
-
+      $fecha = strftime("%y-%m-%d");
       $hora = strftime("%H:%M");
       $validacion = false;
 
@@ -46,7 +43,7 @@
       if($validacion){
         $nombre = $this->model->BuscarNombre(['user' => $user, 'reference' => $reference , 'tabla' => $tabla, 'matricula' => $matricula, 'tipo_usuario' => $tipo_usuario]);
         if(isset($nombre) and $nombre != null){
-            $insert = $this->model->insert(['matricula' => $matricula, 'nombre' => $nombre,'dia' => $dia,'mes' => $mes, 'year' => $year, 'hora' => $hora, 'tipo_usuario' => $tipo_usuario]);
+            $insert = $this->model->insert(['matricula' => $matricula, 'nombre' => $nombre,'fecha' => $fecha, 'hora' => $hora, 'tipo_usuario' => $tipo_usuario]);
             if($insert){
                 if($tipo_usuario == 1){
                   $mensaje .= "

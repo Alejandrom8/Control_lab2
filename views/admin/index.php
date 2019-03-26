@@ -14,46 +14,13 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="<?php echo constant('URL'); ?>public/node_modules/chart.js/dist/Chart.js"></script>
     <link rel="stylesheet" type="text/css" href="<?php echo constant('URL'); ?>public/node_modules/chart.js/dist/Chart.css">
+    <script src="<?php echo constant('URL'); ?>public/js/verificar.js"></script>
     <style>
       canvas{
         width:100%;
         height:50%;
-        /* background-color:#ffd; */
       }
     </style>
-        <script>
-        function validar(){
-          var nombre = document.getElementById("Nombre").value;
-          var id = document.getElementById("id").value;
-          var pass = document.getElementById("pass").value;
-          var pass_r = document.getElementById("pass_r").value;
-
-          if(!nombre || nombre == null || nombre.length > 20){
-              $(document).ready(function(){$('#Nombre').css({'background-color':'red'});});
-              alert('El nombre del aula es muy grande o es invalido');
-              return false;
-          }else if(!id || id == null || id.length > 3 || !/^([0-9])*$/.test(id)){
-              $(document).ready(function(){$('#id').css({'background-color':'red'});});
-              alert('El id del aula es invalido');
-              return false;
-          }else if(!pass || pass == null){
-              $(document).ready(function(){$('#pass').css({'background-color':'red'});});
-              alert('La contraseña contiene caracteres invalidos');
-              return false;
-          }else if (!pass_r || pass_r == null) {
-              $(document).ready(function(){$('#pass_r').css({'background-color':'red'});});
-              alert('La contraseña repetida contiene caracteres invalidos');
-              return false;
-          }
-
-          if(pass === pass_r){
-              return true;
-          }else{
-            alert("Las contraseñas no coinciden");
-            return false;
-          }
-        }
-    </script>
   </head>
   <body>
       <?php require 'views/header.php'; ?>
@@ -106,7 +73,7 @@
                 <div class="pantallas" id="Graficas" style="display:none;padding-top:0;">
                   <header>
                     <div class="col-sm-12">
-                      <form method="POST" action="<?php echo constant('URL'); ?>admin/Graficas" style="background-color:gray;">
+                      <form method="POST" action="<?php echo constant('URL'); ?>admin/Graficas" id="generar_grafica" style="background-color:gray;">
                         <div class="row">
                           <div class="form-group">
                             <label for="de">de: </label>
@@ -124,7 +91,7 @@
                               <option value="year">año</option>
                             </select>
                           </div>
-                          <input type="submit" value="generar grafica" class="btn btn-primary">
+                          <input type="submit" value="generar grafica" id="boton_enviar" class="btn btn-primary">
                         </div>
                       </form>
                     </div>
@@ -132,7 +99,7 @@
                   <div class="row">
                     <div class="chart-container col-sm-12" style="position: relative; height:23vh; width:80vw">
                         <h2><?php echo $this->titulo_st; ?></h2>
-                        <canvas id="myChart"></canvas>
+                        <div id="chart"></div>
                     </div>
                   </div>
                 </div>
@@ -141,33 +108,46 @@
         </div>
       </div>
       <?php require 'views/footer.php'; ?>
-      <script>
-        const botons = document.querySelectorAll(".obj_li");
-        botons.forEach(boton =>{
-          boton.addEventListener("click", function(){
-            const display = this.dataset.pantalla;
-            $(document).ready(function(){
-              $(".pantallas:not(#" + display + ")").css({'display':'none'});
-              $("#" + display).css({'display':'block'});
-            });
-          });
-        });
-      </script>
-      <script>
-      var ctx = document.getElementById('myChart').getContext('2d');
-      var myChart = new Chart(ctx, {
-          type: 'line',
-          data: {<?php echo $this->statistics; ?>},
-          options: {
-              scales: {
-                  yAxes: [{
-                      ticks: {
-                          beginAtZero: true
-                      }
-                  }]
-              }
-          }
-      });
-      </script>
+      <script src="<?php echo constant('URL'); ?>public/js/paginer.js"></script>
+      <script src="<?php echo constant('URL'); ?>public/js/Graficas.js"></script>
+      <!--<script>
+var ctx = document.getElementById('chart');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        datasets: [{
+            label: '# of Votes',
+            data: [12, 19, 3, 5, 2, 3],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+</script>-->
   </body>
 </html>
