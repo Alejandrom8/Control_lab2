@@ -73,7 +73,7 @@ class AdminModel extends Model{
             while($row = $estado_sql->fetch(PDO::FETCH_ASSOC)){
               $visitas[] = $row;
             }
-            return [true, $visitas];
+            return [true, json_encode($visitas)];
           }else{
             return [false, "No hay ningùn registro entre este rango de fechas"];
           }
@@ -89,36 +89,35 @@ class AdminModel extends Model{
   }
 
   public function TomarDatos($data){
-    return [true, $data];
-    // $array = json_decode($data);
-    // $visitas = array();
-    // $dias = array();
+    $array = json_decode($data);
+    $visitas = array();
+    $dias = array();
     // //tomamos todos los dias diferentes que existen
-    // foreach ($data as $key => $value) {
-    //   $dia = date('d',strtotime($value['fecha']));
-    //   if(!in_array($dia,$dias)){
-    //     array_push($visitas, $dia);
-    //   }
-    // }
+    foreach ($array as $key => $value) {
+      $dia = date('d',strtotime($value->fecha));
+      if(!in_array($dia,$dias)){
+          $dias[] = $dia;
+      }
+    }
     // //  por cada dia encontrado, se buscara en el array general cuantos registros
     // //  cuentan con el mismo dia, sumando asi el contador debido para cada dia
     // //  al final se agrega el dia y el conteo total de visitas de ese dia a un array llamado visitas
-    // for($i = 0; $i < count($dias); $i++){
-    //   $v = 0;
-    //   foreach ($data as $key_2 => $value_2) {
-    //     $dia = date('d' ,strtotime($value_2['fecha']));
-    //     if($dia == $dias[$i]){
-    //       $v++;
-    //     }
-    //   }
-    //   $visitas[] = ['dia' => $dias[$i], 'visitas' => $v];
-    // }
+    for($i = 0; $i < count($dias); $i++){
+      $v = 0;
+      foreach ($array as $key_2 => $value_2) {
+        $dia = date('d' ,strtotime($value_2->fecha));
+        if($dia == $dias[$i]){
+          $v++;
+        }
+      }
+      $visitas[] = ['dia' => $dias[$i], 'visitas' => $v];
+    }
     // //finalmente si existen elementos en el array 'visitas', lo retornamos
-    // if(isset($visitas)){
-    //   return [true, json_encode($visitas)];
-    // }else{
-    //   return [false, "Error al cargar los datos"];
-    // }
+    if(isset($visitas)){
+      return [true, json_encode($visitas)];
+    }else{
+      return [false, "Error al cargar los datos"];
+    }
   }
 }
 

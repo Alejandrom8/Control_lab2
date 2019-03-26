@@ -18,7 +18,7 @@
     <style>
       canvas{
         width:100%;
-        height:50%;
+        height:100%;
       }
     </style>
   </head>
@@ -97,9 +97,9 @@
                     </div>
                   </header>
                   <div class="row">
-                    <div class="chart-container col-sm-12" style="position: relative; height:23vh; width:80vw">
+                    <div class="chart-container col-sm-12" style="position: relative; height:60vh; width:80vw">
                         <h2><?php echo $this->titulo_st; ?></h2>
-                        <div id="chart"></div>
+                        <canvas id="chart"></canvas>
                     </div>
                   </div>
                 </div>
@@ -110,44 +110,5 @@
       <?php require 'views/footer.php'; ?>
       <script src="<?php echo constant('URL'); ?>public/js/paginer.js"></script>
       <script src="<?php echo constant('URL'); ?>public/js/Graficas.js"></script>
-      <!--<script>
-var ctx = document.getElementById('chart');
-var myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                }
-            }]
-        }
-    }
-});
-</script>-->
   </body>
 </html>

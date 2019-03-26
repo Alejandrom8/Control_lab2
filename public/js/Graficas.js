@@ -16,32 +16,40 @@ $(document).ready(function(){
       success: function(data){
           var dias = [];
           var visitas = [];
+          var obj = JSON.parse(data);
 
-
-          for(var i in data){
-            dias.push('dia: ' + data[i].dia);
-            visitas.push(data[i].visitas);
+          for(var i in obj){
+            dias.push('dia: ' + obj[i].dia);
+            visitas.push(obj[i].visitas);
           }
 
           var chartData = {
             labels: dias,
             datasets: [
               {
-                label: "tipo_usuario",
-                backgroundColor: 'rgba(200, 200, 200, 0.75)',
-                borderColor: 'rgba(200, 200, 200, 1)',
+                label: "alumnos",
+                backgroundColor: 'rgba(200, 200, 200, 0.5)',
+                borderColor: 'rgb(200, 200, 200)',
                 hoverBackgroundColor: 'rgba(200, 200, 200, 1)',
-                data: visitas,
+                data: visitas
               }
             ]
           };
 
-          var ctx = $('#chart');
+          var ctx = document.getElementById('chart');
           var barGraph = new Chart(ctx, {
             type: "bar",
             data: chartData,
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
           });
-          console.log(data);
       },
       error: function(data){
           alert("Problemas al tratar de enviar el formulario");
