@@ -9,52 +9,84 @@ $(document).ready(function(){
         btnEnviar.val('Enviando...');
         btnEnviar.attr('disabled', 'disabled');
       },
-      complete:function(data){
+      complete:function(){
           btnEnviar.val("generar grafica");
           btnEnviar.removeAttr("disabled");
       },
       success: function(data){
-          var dias = [];
-          var visitas = [];
-          var obj = JSON.parse(data);
-
-          for(var i in obj){
-            dias.push('dia: ' + obj[i].dia);
-            visitas.push(obj[i].visitas);
-          }
-
-          var chartData = {
-            labels: dias,
-            datasets: [
-              {
-                label: "alumnos",
-                backgroundColor: 'rgba(200, 200, 200, 0.5)',
-                borderColor: 'rgb(200, 200, 200)',
-                hoverBackgroundColor: 'rgba(200, 200, 200, 1)',
-                data: visitas
-              }
-            ]
-          };
-
-          var ctx = document.getElementById('chart');
-          var barGraph = new Chart(ctx, {
-            type: "bar",
-            data: chartData,
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                }
-            }
-          });
+        if(data != false){
+          generar_grafica(data);
+        }else{
+          console.log(data);
+        }
       },
-      error: function(data){
+      error: function(){
           alert("Problemas al tratar de enviar el formulario");
       }
     });
     return false;
   });
+
+  function generar_grafica(data){
+    var tipo = $('#tipo').val();
+    var dias = [];
+    var visitas = [];
+    var obj = JSON.parse(data);
+    var colores = [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 159, 64, 0.2)'
+    ];
+    var colores_mostrados = [];
+    var ctx = document.getElementById('chart').getContext('2d');
+    var colores_final;
+
+    for(var i in obj){
+      dias.push('dia: ' + obj[i].termino);
+      visitas.push(obj[i].visitas);
+    }
+
+    if(tipo != 'line'){
+      for(var i = 0; i < visitas.length; i++){
+        var colorIndex = Math.floor(Math.random() * colores.length);
+        colores_mostrados.push(colores[colorIndex]);
+      }
+      colores_final = colores_mostrados;
+    }else{
+      colores_final = 'rgba(75, 192, 192, 0.2)';
+    }
+
+    var chartData = {
+      labels: dias,
+      datasets: [
+        {
+          label: "alumnos",
+          backgroundColor: colores_final,
+          data: visitas
+        }
+      ]
+    };
+
+    if(window.barGraph){
+      window.barGraph.clear();
+      window.barGraph.destroy();
+    }
+
+    window.barGraph = new Chart(ctx, {
+      type: tipo,
+      data: chartData,
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+          }
+      }
+    });
+  }
 });

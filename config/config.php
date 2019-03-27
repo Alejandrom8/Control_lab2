@@ -13,6 +13,7 @@
   //tablas
   define('Consulta_prof', 'profdegae');
   define('Consulta_alumn', 'calif');
+  define('todas_las_visitas', 'visitas_totales');
 
   if(isset($_SESSION['id']) and $_SESSION['id'] != null and $_SESSION['id'] != ""){
     $__tabla = $_SESSION['id'];

@@ -2,7 +2,7 @@
   class Salir extends Controller{
     function __construct(){
       parent::__construct();
-      $this->view->mensaje = ""; 
+      $this->view->mensaje = "";
     }
     function salir(){
       echo "Espere un momento porfavor...";
@@ -23,11 +23,10 @@
       $ejecutar = $this->model->finalizar();
       if($ejecutar){
         print("<script>alert('Se finalizo correctamente');</script>");
-        $this->render();
       }else{
         print("<script>alert('No se logro finalizar correctamente');</script>");
-        $this->render();
       }
+      $this->render();
     }
   }
  ?>

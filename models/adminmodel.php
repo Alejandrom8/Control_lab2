@@ -1,5 +1,5 @@
 <?php
-include_once 'models/visita.php';
+include_once 'models/aulas.php';
 
 class AdminModel extends Model{
 
@@ -60,18 +60,22 @@ class AdminModel extends Model{
     }
   }
 
-  public function ValidarFecha($desde, $hasta){
+  public function ValidarFecha($donde,$desde, $hasta){
     $fecha_actual = strtotime(date("y-m-d"));
     if($hasta <= $fecha_actual){
+      if($donde != 'todas'){
+        $sql = "SELECT tipo, fecha, hora, no_copias FROM " . constant('todas_las_visitas')  . " WHERE (fecha BETWEEN '$desde' AND '$hasta') AND id_aula = '$donde' ORDER BY fecha ASC";
+      }else{
+        $sql = "SELECT tipo, fecha, hora, no_copias FROM " . constant('todas_las_visitas')  . " WHERE fecha BETWEEN '$desde' AND '$hasta' ORDER BY fecha ASC";
+      }
       try{
-        $sql = "SELECT fecha, hora, no_copias FROM visitas_801 WHERE fecha BETWEEN '$desde' AND '$hasta'";
         $estado_sql = $this->con->prepare($sql);
         $estado_sql->execute();
         if($estado_sql){
           if($datos = $estado_sql->fetch(PDO::FETCH_ASSOC)){
             $visitas = array();
             while($row = $estado_sql->fetch(PDO::FETCH_ASSOC)){
-              $visitas[] = $row;
+              array_push($visitas, $row);
             }
             return [true, json_encode($visitas)];
           }else{
@@ -88,36 +92,18 @@ class AdminModel extends Model{
     }
   }
 
-  public function TomarDatos($data){
-    $array = json_decode($data);
-    $visitas = array();
-    $dias = array();
-    // //tomamos todos los dias diferentes que existen
-    foreach ($array as $key => $value) {
-      $dia = date('d',strtotime($value->fecha));
-      if(!in_array($dia,$dias)){
-          $dias[] = $dia;
-      }
+  public function ConsultarSalas($exception){
+    $sql = "SELECT id, aula FROM aulas WHERE id <> $exception";
+    $ejecutar = $this->con->prepare($sql);
+    $ejecutar->execute();
+    $aulas = array();
+    while($row = $ejecutar->fetch(PDO::FETCH_ASSOC)){
+      $aula = new Aulas();
+      $aula->id = $row['id'];
+      $aula->aula = $row['aula'];
+      array_push($aulas, $aula);
     }
-    // //  por cada dia encontrado, se buscara en el array general cuantos registros
-    // //  cuentan con el mismo dia, sumando asi el contador debido para cada dia
-    // //  al final se agrega el dia y el conteo total de visitas de ese dia a un array llamado visitas
-    for($i = 0; $i < count($dias); $i++){
-      $v = 0;
-      foreach ($array as $key_2 => $value_2) {
-        $dia = date('d' ,strtotime($value_2->fecha));
-        if($dia == $dias[$i]){
-          $v++;
-        }
-      }
-      $visitas[] = ['dia' => $dias[$i], 'visitas' => $v];
-    }
-    // //finalmente si existen elementos en el array 'visitas', lo retornamos
-    if(isset($visitas)){
-      return [true, json_encode($visitas)];
-    }else{
-      return [false, "Error al cargar los datos"];
-    }
+    return $aulas;
   }
 }
 

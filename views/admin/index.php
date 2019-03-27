@@ -26,17 +26,20 @@
       <?php require 'views/header.php'; ?>
       <div id="main" class="col-sm-12">
         <h1 class="center">Seccion de administraciòn</h1>
+        <p><?php echo $this->mensaje; ?></p>
         <div class="contorno" id="display_admin">
             <div class="col-md-12 display">
               <aside>
                 <table class="table table-striped">
                   <tbody>
-                    <tr class='obj_li' data-pantalla = 'Registrar'><td>Registrar sala</td></tr>
-                    <tr class='obj_li' data-pantalla = 'Graficas'><td>Graficas</td></tr>
-                    <tr class='obj_li' data-pantalla = 'Estadisticas'><td>Estadisticas</td></tr>
+                    <tr class='obj_li' data-pantalla = 'Registrar' id="Registrar_menu"><td>Registrar sala</td></tr>
+                    <tr class='obj_li' data-pantalla = 'Graficas' id="Graficas_menu"><td>Graficas</td></tr>
+                    <tr class='obj_li' data-pantalla = 'Estadisticas' id="Estadisticas_menu"><td>Estadisticas</td></tr>
                   </tbody>
                 </table>
               </aside>
+              <section>
+                <div class="margen_dispaly">
                 <div class="pantallas" id="Registrar" style="display:block;">
                   <h2>Registro de sala</h2>
                   <div class="col-sm-8">
@@ -73,37 +76,64 @@
                 <div class="pantallas" id="Graficas" style="display:none;padding-top:0;">
                   <header>
                     <div class="col-sm-12">
-                      <form method="POST" action="<?php echo constant('URL'); ?>admin/Graficas" id="generar_grafica" style="background-color:gray;">
+                      <form method="POST" action="<?php echo constant('URL'); ?>admin/Graficas" id="generar_grafica">
                         <div class="row">
-                          <div class="form-group">
-                            <label for="de">de: </label>
-                            <input type="date" name="de" id="de" required>
+                          <div class="form-group" style="background-color:#FF6859;text-align:center;color:#fff;padding:5px;width:20%;">
+                            <label for="sala">Selecciona una sala</label>
+                            <select class="form-control" name="sala">
+                              <option value="<?php echo $_SESSION['id']; ?>">Esta sala</option>
+                              <?php
+                                include_once 'models/aulas.php';
+                                foreach ($this->aulas as $key => $value) {
+                                  $aula = new Aulas();
+                                  $aula = $value;
+                                  echo "<option value='$aula->id'>Sala $aula->aula</option>";
+                                }
+                              ?>
+                              <option value="todas">todas</option>
+                            </select>
                           </div>
-                          <div class="form-group">
-                            <label for="a">a: </label>
-                            <input type="date" name="a" id="a" required>
+                          <div class="form-group" style="background-color:#1EB980;text-align:center;color:#fff;padding:5px;width:15%;">
+                            <label for="tipo">Tipo de grafica</label>
+                            <select class="form-control" name="tipo" id="tipo">
+                              <option value="bar">Barras</option>
+                              <option value="line">Lineal</option>
+                              <option value="doughnut">Pastel</option>
+                            </select>
                           </div>
-                          <div class="form-group">
-                            <label for="clasif">Clasificar por:  </label>
-                            <select name="clasif" id="clasif" required>
+                          <div class="form-group" style="background-color:#FFCF44;text-align:center;color:#333;padding:5px;">
+                            <label for="de">Fecha inicial</label>
+                            <input type="date" name="de" id="de" class="form-control" required>
+                          </div>
+                          <div class="form-group" style="background-color:#045D56;text-align:center;color:#fff;padding:5px;">
+                            <label for="a">Fecha final</label>
+                            <input type="date" name="a" id="a" class="form-control" required>
+                          </div>
+                          <div class="form-group" style="background-color:#FF6859;text-align:center;color:#fff;padding:5px;width:10%;">
+                            <label for="clasif">Clasificar por</label>
+                            <select name="clasif" id="clasif" class="form-control" required>
                               <option value="dia">dia</option>
                               <option value="mes">mes</option>
                               <option value="year">año</option>
                             </select>
                           </div>
-                          <input type="submit" value="generar grafica" id="boton_enviar" class="btn btn-primary">
+                          <div class="form-group">
+                            <input type="submit" value="generar grafica" id="boton_enviar" class="btn btn-primary" style="height:100%;border:0;">
+                          </div>
                         </div>
                       </form>
                     </div>
                   </header>
                   <div class="row">
-                    <div class="chart-container col-sm-12" style="position: relative; height:60vh; width:80vw">
+                    <div class="chart-container col-sm-12" style="position: relative; height:55vh; width:70vw">
                         <h2><?php echo $this->titulo_st; ?></h2>
                         <canvas id="chart"></canvas>
                     </div>
                   </div>
                 </div>
                 <div class="pantallas" id="Estadisticas" style="display:none;">Adios de nuevo</div>
+                </div>
+              </section>
             </div>
         </div>
       </div>
