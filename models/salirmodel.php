@@ -4,6 +4,15 @@
       parent::__construct();
       $this->con = $this->db->connect();
     }
+    function consultar(){
+      $sql = "SELECT session FROM visitas_" . $_SESSION['id']  . " WHERE session = 1";
+      $preparar = $this->con->prepare($sql);
+      $preparar->execute();
+      while($row = $preparar->fetch(PDO::FETCH_ASSOC)){
+        return false;
+      }
+      return true;
+    }
     function finalizar(){
       $sql = "UPDATE visitas_". $_SESSION['id'] ." SET session = 0";
       $sql_execute = $this->con->prepare($sql);

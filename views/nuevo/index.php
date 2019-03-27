@@ -11,28 +11,8 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <!-- <link rel="stylesheet" href="<?php echo constant('URL'); ?>public/css/default.css"> -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <style>
-      /* #header{
-        display:none;
-        height:8%;
-        position: relative;
-        -webkit-transition: all 0.3s;
-      }
-      #hover{
-        display:block;
-        width:100%;
-        height:10%;
-        position: absolute;
-      }
-      #hover:hover ~ #header, #header ul{
-        display:block;
-        position: absolute;
-        -webkit-transition: all 0.3s;
-      } */
-    </style>
   </head>
   <body>
-      <!-- <div id="hover"></div> -->
       <?php require 'views/header.php'; ?>
       <div id="main">
         <div class="registro">
@@ -42,7 +22,7 @@
           <br>
           <form id="form_RV" action="<?php echo constant('URL'); ?>nuevo/registrarVisita" method="post">
             <div class="form-group">
-              <input type="text" name="matricula" class="form-control matricula" required>
+              <input type="text" name="matricula" class="form-control matricula" required autofocus>
             </div>
             <p>
               <input type="submit" id="RV" value="Registrar visita" class="btn btn-primary" >

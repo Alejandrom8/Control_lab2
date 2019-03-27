@@ -4,8 +4,7 @@
 
     function __construct(){
       parent::__construct();
-      $this->view->mensaje = "Hubo un error en la solicitud o no existe la paàgina";
-      $this->view->render('error/index');
+      print("<script>alert('Hubo un error en la solicitud o no existe la página');window.location='".constant('URL')."nuevo';</script>");
     }
 
   }

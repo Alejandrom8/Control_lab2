@@ -14,7 +14,7 @@
         $this->view->aulas = $aulas;
           $this->view->render('admin/index');
       }else{
-          print("<script>alert('acceso denegado'); history.back();</script>");
+          print("<script>alert('acceso denegado'); window.location='".constant('URL')."nuevo';</script>");
       }
     }
 
@@ -122,6 +122,29 @@
         return [true, json_encode($visitas)];
       }else{
         return [false, "Error al cargar los datos"];
+      }
+    }
+
+    function Insert(){
+      $archivo = $_FILES['archivo'];
+      $separation = $_POST['separation'];
+      $id = $_POST['id'];
+
+      $nombre_archivo = $archivo['name'];
+      $size_archivo = $archivo['size'];
+      $tipo_archivo = explode('.', $nombre_archivo);
+
+      if(strtolower(end($tipo_archivo)) == 'csv'){
+        $filename = $_FILES['archivo']['tmp_name'];
+        $handle = fopen($filename, 'r');
+        $insertar = $this->model->Insertar($handle, $separation, $id);
+        if($insertar){
+          echo "Se insertaron todos los datos correctamente";
+        }else{
+          echo "No se insertaron los datos correctamente";
+        }
+      }else{
+        echo "El tipo de archivo es invalido";
       }
     }
   }

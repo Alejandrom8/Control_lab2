@@ -11,17 +11,19 @@
 
     public function get_id($aula){
 
-      $sql = "SELECT id, permisos FROM aulas WHERE aula = '$aula' OR id='$aula'";
+      $sql = "SELECT id, aula, permisos FROM aulas WHERE aula = '$aula' OR id='$aula'";
       $query = $this->con->prepare($sql);
       $query->execute();
       $id = null;
       while($row = $query->fetch(PDO::FETCH_ASSOC)){
         $id = $row['id'];
+        $nombre = $row['aula'];
         $permisos = $row['permisos'];
         break;
       }
       if($query){
         $_SESSION['id'] = $id;
+        $_SESSION['nombre'] = $nombre;
         $_SESSION['permisos'] = $permisos;
         return true;
       }else{

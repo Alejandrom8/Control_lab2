@@ -105,6 +105,15 @@ class AdminModel extends Model{
     }
     return $aulas;
   }
+
+  public function Insertar($archivo, $separador, $id){
+    while(($data = fgetcsv($archivo, 1000, $separador)) !== FALSE){
+      $sql = "INSERT INTO ". constant('todas_las_visitas') ."(matricula, id_aula, nombre, tipo, fecha, hora, no_copias) VALUE('$data[0]','$id','$data[1]', '$data[2]', '$data[3]', '$data[4]', '$data[5]')";
+      $ejecutar = $this->con->prepare($sql);
+      $ejecutar->execute();
+    }
+    return true;
+  }
 }
 
  ?>

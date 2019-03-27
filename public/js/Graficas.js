@@ -10,11 +10,12 @@ $(document).ready(function(){
         btnEnviar.attr('disabled', 'disabled');
       },
       complete:function(){
-          btnEnviar.val("generar grafica");
+          btnEnviar.val("Generar");
           btnEnviar.removeAttr("disabled");
       },
       success: function(data){
         if(data != false){
+          $(".titulo_grafica").css({'display':'block'});
           generar_grafica(data);
         }else{
           console.log(data);
@@ -29,6 +30,7 @@ $(document).ready(function(){
 
   function generar_grafica(data){
     var tipo = $('#tipo').val();
+    var clasificacion = $('#clasif').val();
     var dias = [];
     var visitas = [];
     var obj = JSON.parse(data);
@@ -45,7 +47,7 @@ $(document).ready(function(){
     var colores_final;
 
     for(var i in obj){
-      dias.push('dia: ' + obj[i].termino);
+      dias.push(clasificacion + ' : ' + obj[i].termino);
       visitas.push(obj[i].visitas);
     }
 

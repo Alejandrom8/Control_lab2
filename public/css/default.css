@@ -179,7 +179,7 @@ animation-iteration-count: infinite;
   height: 40px;
   color: white;
 }
-#logo_unam:hover{
+#header ul #logo_unam:hover{
   background-color:transparent;
 }
 .logo_unam{

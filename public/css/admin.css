@@ -1,3 +1,15 @@
+@font-face {
+  src: url('../tipografias/interestate_rc.otf');
+  font-family: interestate_rc;
+}
+@font-face {
+  src: url('../tipografias/DancingScript-Regular.otf');
+  font-family: Dancing;
+}
+@font-face {
+  src: url('../tipografias/Roboto-Regular.ttf');
+  font-family: roboto;
+}
 #display_admin{
   height:90%;
 }
@@ -12,18 +24,21 @@
 
 .display aside{
   width:20%;
-  height:100%;
-  background-color:#eee;
+  height:630px;
+  background-color:#F2B446;
   border-radius:20px;
   overflow: hidden;
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
-
   float:left;
 }
+.display aside td{
+  font-family:"roboto";
+  font-size: 1rem;
+}
 .display aside table tr:hover{
-  background-color:#fff;
+  background-color:#141E26;
   cursor:pointer;
   font-weight:bold;
+  color:#fff;
 }
 .display section{
   width:80%;
@@ -41,9 +56,11 @@
 .pantallas{
   float:left;
   width:100%;
-  height:500px;
+  height:600px;
   padding:5%;
   overflow-y: scroll;
+  /* border-bottom:solid 10px rgb(20, 30, 38); */
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
 }
 #registro_aula .form-group input,select{
   float:right;
@@ -55,4 +72,62 @@
   font-family: Helvetica;
   margin:8%;
   margin-top:0;
+}
+.cont-pantallas-form{
+  margin-left:10%;
+  width:80%;
+  height:100%;
+}
+#separation{
+  font-weight:bold;
+  font-size:30px;
+  text-align: center;
+  padding:0;
+  height:40px;
+  float:left;
+}
+.btn-file {
+  position: relative;
+  overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+.import_section{
+  width:100%;
+  height:400px;
+  font-family: "Calibri light";
+}
+.import_section p{
+  font-size: 1em;
+  font-weight:bold;
+  line-height: 2px;
+  color:#444;
+  margin:5%;
+}
+.import_section .tabla_muestra{
+  background-color:#eee;
+}
+.box-chart{
+  background-color:#ddd;
+  padding-top:2%;
+  padding-left:1%;
+  border-radius:5px;
+  font-family:"Calibri light", Helvetica;
+  font-weight:bold;
+  -webkit-box-shadow: 0px 10px 5px 0px rgba(0,0,0,0.61);
+  -moz-box-shadow: 0px 10px 5px 0px rgba(0,0,0,0.61);
+  box-shadow: 0px 10px 5px 0px rgba(0,0,0,0.61);
 }
