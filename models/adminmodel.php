@@ -1,5 +1,6 @@
 <?php
 include_once 'models/aulas.php';
+include_once 'models/visita.php';
 
 class AdminModel extends Model{
 
@@ -113,6 +114,56 @@ class AdminModel extends Model{
       $ejecutar->execute();
     }
     return true;
+  }
+
+  public function Export($tabla){
+    try{
+      $sql_exists = "SHOW TABLES LIKE '$tabla'";
+      $result = $this->con->prepare($sql_exists);
+      $result->execute();
+      $existe = false;
+
+      while($row = $result->fetch(PDO::FETCH_ASSOC)){
+        $existe = true;
+      }
+
+      if($existe){
+        try {
+
+          if($tabla == constant('todas_las_visitas')){
+            $sql = "SELECT matricula, id_aula, nombre, tipo, fecha, hora, no_copias FROM " . constant('todas_las_visitas') . " ORDER BY fecha ASC";
+          }else{
+            $sql = "SELECT matricula, id_aula, nombre, tipo, fecha, hora, no_copias FROM visitas_" . $tabla . " ORDER BY fecha ASC";
+          }
+          $ejecutar = $this->con->prepare($sql);
+          $ejecutar->execute();
+          $visitas = array();
+          if($row2 = $ejecutar->fetch(PDO::FETCH_ASSOC)){
+            while($row2 = $ejecutar->fetch(PDO::FETCH_ASSOC)){
+              $visita = new Visita();
+              $visita->matricula = $row2['matricula'];
+              $visita->id_aula = $row2['id_aula'];
+              $visita->nombre = $row2['nombre'];
+              $visita->tipo = $row2['tipo'];
+              $visita->fecha = $row2['fecha'];
+              $visita->hora = $row2['hora'];
+              $visita->no_copias = $row2['no_copias'];
+              array_push($visitas, $visita);
+            }
+
+            return [true, json_encode($visitas)];
+        }else{
+          return [false, 'No hay resultados para esta sala'];
+        }
+        } catch (PDOException $e) {
+          return [false, 'Hubo un error al buscar los datos'];
+        }
+      }else{
+        return [false,'La sala que indico no existe'];
+      }
+    }catch(PDOException $e){
+        return [false, 'Hubo un error al llevar a cabo la operación'];
+    }
   }
 }
 

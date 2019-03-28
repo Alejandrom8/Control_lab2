@@ -33,8 +33,8 @@
                   <tbody>
                     <tr class='obj_li' data-pantalla = 'Registrar' id="Registrar_menu"><td>Registrar sala</td></tr>
                     <tr class='obj_li' data-pantalla = 'Graficas' id="Graficas_menu"><td>Graficas</td></tr>
-                    <tr class='obj_li' data-pantalla = 'Estadisticas' id="Estadisticas_menu"><td>Estadisticas</td></tr>
                     <tr class='obj_li' data-pantalla = 'Importar' id="Importar_menu"><td>Importar datos</td></tr>
+                    <tr class='obj_li' data-pantalla = 'Exportar' id="Exportar_menu"><td>Exportar datos</td></tr>
                   </tbody>
                 </table>
               </aside>
@@ -145,7 +145,6 @@
                     </div>
                   </div>
                 </div>
-                <div class="pantallas" id="Estadisticas" style="display:none;">Adios de nuevo</div>
                 <div class="pantallas" id="Importar" style="display:none;">
                   <div class="cont-pantallas-form">
                     <center><h2>Importar datos</h2></center>
@@ -208,14 +207,80 @@
                     </div>
                   </div>
                 </div>
+                <div class="pantallas" id="Exportar" style="display:none;">
+                  <h2 class="center">Exportar Tabla</h2>
+                  <div class="col-sm-12">
+                    <form class="form" action="<?php echo constant('URL'); ?>admin/Export" id="Export" method="post">
+                      <div class="cont-export">
+                        <div class="fondo">
+                          <div class="row btn-cont">
+                            <div class="col-sm-8">
+                              <select class="form-control" name="sala" required>
+                                <option value="">Selecciona una sala</option>
+                                <option value="<?php echo $_SESSION['id']; ?>">Esta sala</option>
+                                <?php
+                                  include_once 'models/aulas.php';
+                                  foreach ($this->aulas as $key => $value) {
+                                    $aula = new Aulas();
+                                    $aula = $value;
+                                    echo "<option value='$aula->id'>Sala $aula->aula</option>";
+                                  }
+                                ?>
+                                <option value="todas">todas</option>
+                              </select>
+                            </div>
+                            <div class="col-sm-4">
+                              <input type="submit" name="enviar" value="Obtener tabla" id="OT" class="boton">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                    <div class="col-sm-12">
+                      <div id="mensaje" style="display:none;">
+                        <center id="bt_ex" style="display:none;"><button id="export" onclick="tableToExcel('tabla', 'W3C Example Table')" class="btn btn-success">Exportar Tabla a Excel</button></center>
+                        <br><br>
+                        <table class="table table-bordered" id="tabla">
+
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 </div>
               </section>
             </div>
         </div>
       </div>
       <?php require 'views/footer.php'; ?>
+      <script>
+        //Script para exportar la tabla a formato CSV
+        var tableToExcel = ( function () {
+          var uri = 'data:application/vnd.ms-excel;base64,',
+            template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>',
+            base64 = function ( s ) {
+              return window.btoa( unescape( encodeURIComponent( s ) ) )
+            },
+            format = function ( s, c ) {
+              return s.replace( /{(\w+)}/g, function ( m, p ) {
+                return c[ p ];
+              } )
+            }
+          return function ( table, name ) {
+            if ( !table.nodeType ) {
+              table = document.getElementById( table );
+              var ctx = {
+                worksheet: name || 'Worksheet',
+                table: table.innerHTML
+              }
+              window.location.href = uri + base64( format( template, ctx ) );
+            }
+          }
+        } )();
+      </script>
       <script src="<?php echo constant('URL'); ?>public/js/paginer.js"></script>
       <script src="<?php echo constant('URL'); ?>public/js/Graficas.js"></script>
       <script src="<?php echo constant('URL'); ?>public/js/Import.js"></script>
+      <script src="<?php echo constant('URL'); ?>public/js/Export.js"></script>
   </body>
 </html>

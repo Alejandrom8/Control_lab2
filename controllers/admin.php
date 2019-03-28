@@ -18,10 +18,17 @@
       }
     }
 
+    function test_input($data) {
+      $data = trim($data);
+      $data = stripslashes($data);
+      $data = htmlspecialchars($data);
+      return $data;
+    }
+
     function crear_sala(){
 
-      $nombre = $_POST['Nombre'];
-      $id = $_POST['id'];
+      $nombre = $this->test_input($_POST['Nombre']);
+      $id = $this->test_input($_POST['id']);
       $pass = $_POST['pass'];
       $permisos = $_POST['permisos'];
       $pass_hash = password_hash($pass, PASSWORD_DEFAULT);
@@ -45,10 +52,10 @@
 
     function Graficas(){
       //reciviendo variables ajax
-      $aula = $_REQUEST['sala'];
-      $fecha_de_inicio = $_REQUEST['de'];
-      $fecha_de_cierre = $_REQUEST['a'];
-      $clasificacion = $_REQUEST['clasif'];
+      $aula = $this->test_input($_REQUEST['sala']);
+      $fecha_de_inicio = $this->test_input($_REQUEST['de']);
+      $fecha_de_cierre = $this->test_input($_REQUEST['a']);
+      $clasificacion = $this->test_input($_REQUEST['clasif']);
 
       if($fecha_de_inicio > $fecha_de_cierre){
         $this->view->mensaje = "Rango de fechas invalido";
@@ -145,6 +152,27 @@
         }
       }else{
         echo "El tipo de archivo es invalido";
+      }
+    }
+
+    function Export(){
+      $aula = $this->test_input($_REQUEST['sala']);
+      $tabla = $aula == 'todas' ? constant('todas_las_visitas') : 'visitas_' . $aula;
+      if($tabla != null){
+        $tomar_datos = $this->model->Export($tabla);
+        if($tomar_datos){
+          $estado = $tomar_datos[0];
+          $resultado = $tomar_datos[1];
+          if($estado){
+              echo $resultado;
+          }else{
+            echo false;
+          }
+        }else{
+          echo false;
+        }
+      }else{
+        echo false;
       }
     }
   }
