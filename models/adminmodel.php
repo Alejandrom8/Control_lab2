@@ -12,7 +12,12 @@ class AdminModel extends Model{
   }
 
   public function comprobar($id, $aula){
-
+    /** funcion para comprobar si un id o un aula existen.
+    * Se usa en el controlador admin para registrar una nueva sala
+    * @access public
+    * @param int $id id del aula, @param string $aula nombre del aula.
+    * @return true si esxiste el aula, @return false si no existe
+    **/
     $sql = "SELECT id,aula FROM aulas WHERE id = $id OR aula = '$aula'";
     $query_prep = $this->con->prepare($sql);
     $query_prep->execute();
@@ -26,6 +31,19 @@ class AdminModel extends Model{
   }
 
   public function CrearSala($datos){
+    /** funcion para crear la sala, genera el registro en la
+    * tabla 'aulas' de los datos de la sala y posteriormente crea una
+    * tabla nueva para esa sala en la que se registraran todas sus visitas.
+    * Se usa en el controlador admin para crear los registros de nuevas salas
+    * @access public
+    * @param array 'datos', debe contener:
+    *        - ['nombre'] String Nombre
+    *        - ['id'] Int  ID
+    *        - ['password'] String password
+    *        - ['permisos'] Int permisos 0 = sin permisos, 1 = administrador
+    * @return false en cualquier caso de error durante el proceso
+    * @return true si se completa todo el proceso con exito
+    **/
     $nombre = $datos['nombre'];
     $id = $datos['id'];
     $password = $datos['password'];
@@ -62,6 +80,24 @@ class AdminModel extends Model{
   }
 
   public function ValidarFecha($donde,$desde, $hasta){
+    /** funcion para validar las fechas que se mandan desde la seccion de generar graficas,
+    * valida que la fecha de cierre no sobrepase la fecha actual y valida la tabla donde se
+    * busca extraer los datos para la grafica.
+    * Esta funcion al terminar la validacion, trae todos los registros que se encuentren dentro
+    * del rango de fechas solicitado por el usuario.
+    * @access public
+    * @param String $donde tabla donde se buscaran los datos.
+    * @param Date $desde fecha con la que inicia el rango de registros buscados
+    * @param Date $hasta fecha con la que termina el rango de registros buscados
+    * @return Array [estado, mensaje/resultado]:
+    *          -'estado' puede ser false en cualquier error durante la
+    *            ejecucion de las consultas, de lo contrario,
+    *            si todo sale bien, sera true.
+    *          -'mensaje/resultado' puede ser un mensaje de error si
+    *            algo sale mal durante las consultas o puede ser el resultado[1] si todo sale bien.
+    *
+    *               [1] resultado = archivo tipo JSON con todos los registros solisitados
+    **/
     $fecha_actual = strtotime(date("y-m-d"));
     if($hasta <= $fecha_actual){
       if($donde != 'todas'){
@@ -86,7 +122,7 @@ class AdminModel extends Model{
           return [false, "hubo un error al realizar la consulta"];
         }
       }catch(PDOException $e){
-        print_r('Error al realizar la consulta: ' . $e->getMessage());
+        return [false, "hubo un error al realizar la consulta"];
       }
     }else{
       return [false, "La fecha de cierre es mayor a la fecha actual, introdusca una fecha valida"];
@@ -94,6 +130,12 @@ class AdminModel extends Model{
   }
 
   public function ConsultarSalas($exception){
+    /** funcion que se encarga de tomar todas las salas existentes
+    * y enlistarlas como objetos en un array.
+    * @access public
+    * @param String $exception tabla de la sesion activa
+    * @return Array $aulas con todas las aulas en forma de objeto
+    **/
     $sql = "SELECT id, aula FROM aulas WHERE id <> $exception";
     $ejecutar = $this->con->prepare($sql);
     $ejecutar->execute();
@@ -108,6 +150,14 @@ class AdminModel extends Model{
   }
 
   public function Insertar($archivo, $separador, $id){
+    /** funcion que se encarga de anidar los registros que se introduzcan por formato csv
+    * a los registros existentes en la tabla visitas_totales/constant('todas_las_visitas')
+    * @access public
+    * @param FILE tipo CSV $archivo contiene los registros a insertar
+    * @param String $separador indica la separacion entre Columnas
+    * @param Int $id ID del aula
+    * @return true al finalizar
+    **/
     while(($data = fgetcsv($archivo, 1000, $separador)) !== FALSE){
       $sql = "INSERT INTO ". constant('todas_las_visitas') ."(matricula, id_aula, nombre, tipo, fecha, hora, no_copias) VALUE('$data[0]','$id','$data[1]', '$data[2]', '$data[3]', '$data[4]', '$data[5]')";
       $ejecutar = $this->con->prepare($sql);
@@ -117,6 +167,17 @@ class AdminModel extends Model{
   }
 
   public function Export($tabla){
+    /** Funcion que trae todos los registros de una sala en especifico.
+    * @access public
+    * @param String $tabla tabla en la de la que se extraeran los datos
+    * @return Array [estado, mensaje/resultado]:
+    *         -'estado' false si ocurre algun error durante el proceso,
+    *                   true si todo sale bien.
+    *         -'mensaje/resultado' retorna un mensaje de error si algo no sale bien en el proceso.
+    *                              retorna el resultado[1] si todo sale bien.
+    *
+    *         [1] resultado = array en formato JSON que contiene todos los registros de la tabla
+    **/
     try{
       $sql_exists = "SHOW TABLES LIKE '$tabla'";
       $result = $this->con->prepare($sql_exists);
@@ -125,19 +186,17 @@ class AdminModel extends Model{
 
       while($row = $result->fetch(PDO::FETCH_ASSOC)){
         $existe = true;
+        break;
       }
 
       if($existe){
-        try {
 
-          if($tabla == constant('todas_las_visitas')){
-            $sql = "SELECT matricula, id_aula, nombre, tipo, fecha, hora, no_copias FROM " . constant('todas_las_visitas') . " ORDER BY fecha ASC";
-          }else{
-            $sql = "SELECT matricula, id_aula, nombre, tipo, fecha, hora, no_copias FROM visitas_" . $tabla . " ORDER BY fecha ASC";
-          }
+        try {
+          $sql = $tabla == constant('todas_las_visitas') ? "SELECT matricula, id_aula, nombre, tipo, fecha, hora, no_copias FROM " . constant('todas_las_visitas') . " ORDER BY fecha ASC" : "SELECT matricula, id_aula, nombre, tipo, fecha, hora, no_copias FROM visitas_" . $tabla . " ORDER BY fecha ASC";
           $ejecutar = $this->con->prepare($sql);
           $ejecutar->execute();
           $visitas = array();
+
           if($row2 = $ejecutar->fetch(PDO::FETCH_ASSOC)){
             while($row2 = $ejecutar->fetch(PDO::FETCH_ASSOC)){
               $visita = new Visita();
@@ -152,12 +211,14 @@ class AdminModel extends Model{
             }
 
             return [true, json_encode($visitas)];
-        }else{
-          return [false, 'No hay resultados para esta sala'];
-        }
-        } catch (PDOException $e) {
+          }else{
+            return [false, 'No hay resultados para esta sala'];
+          }
+
+        }catch (PDOException $e) {
           return [false, 'Hubo un error al buscar los datos'];
         }
+
       }else{
         return [false,'La sala que indico no existe'];
       }

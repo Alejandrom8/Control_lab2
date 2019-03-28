@@ -26,7 +26,7 @@
       <?php require 'views/header.php'; ?>
       <div id="main" class="col-sm-12">
         <p><?php echo $this->mensaje; ?></p>
-        <div class="contorno" id="display_admin">
+        <!-- <div class="contorno" id="display_admin"> -->
             <div class="col-md-12 display">
               <aside>
                 <table class="table table-striped" style="background-color:#fff;border-top:20px solid #666;">
@@ -137,10 +137,10 @@
                     <div class="chart-container col-sm-12" style="position: relative; height:46vh; width:57vw">
                         <h2><?php echo $this->titulo_st; ?></h2>
                         <h2 class="titulo_grafica center" style="display:none;">Gráfica de visitas</h2>
-                        <canvas id="chart"></canvas>
+                        <canvas id="chart_visitas"></canvas>
                         <br>
                         <h2 class="titulo_grafica center" style="display:none;">Gráfica de copias</h2>
-                        <canvas id="chart"></canvas>
+                        <canvas id="chart_copias"></canvas>
                         <br><br>
                     </div>
                   </div>
@@ -250,7 +250,7 @@
                 </div>
               </section>
             </div>
-        </div>
+        <!-- </div> -->
       </div>
       <?php require 'views/footer.php'; ?>
       <script>
