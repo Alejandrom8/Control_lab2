@@ -135,7 +135,6 @@
                   </header>
                   <div class="row">
                     <div class="chart-container col-sm-12" style="position: relative; height:46vh; width:57vw">
-                        <h2><?php echo $this->titulo_st; ?></h2>
                         <h2 class="titulo_grafica center" style="display:none;">Gráfica de visitas</h2>
                         <canvas id="chart_visitas"></canvas>
                         <br>

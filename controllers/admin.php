@@ -4,7 +4,6 @@
     function __construct(){
       parent::__construct();
       $this->view->mensaje = "";
-      $this->view->titulo_st = "";
       $this->view->aulas = [];
     }
 
@@ -12,7 +11,7 @@
       if($_SESSION['permisos'] == 1){
         $aulas = $this->model->ConsultarSalas($_SESSION['id']);
         $this->view->aulas = $aulas;
-          $this->view->render('admin/index');
+        $this->view->render('admin/index');
       }else{
           print("<script>alert('acceso denegado'); window.location='".constant('URL')."nuevo';</script>");
       }
@@ -220,9 +219,8 @@
 
     function Export(){
       $aula = $this->test_input($_REQUEST['sala']);
-      $tabla = $aula == 'todas' ? constant('todas_las_visitas') : 'visitas_' . $aula;
-      if($tabla != null){
-        $tomar_datos = $this->model->Export($tabla);
+      if($aula != null){
+        $tomar_datos = $this->model->Export($aula);
         if($tomar_datos){
           $estado = $tomar_datos[0];
           $resultado = $tomar_datos[1];

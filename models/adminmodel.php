@@ -166,7 +166,7 @@ class AdminModel extends Model{
     return true;
   }
 
-  public function Export($tabla){
+  public function Export($id){
     /** Funcion que trae todos los registros de una sala en especifico.
     * @access public
     * @param String $tabla tabla en la de la que se extraeran los datos
@@ -179,20 +179,23 @@ class AdminModel extends Model{
     *         [1] resultado = array en formato JSON que contiene todos los registros de la tabla
     **/
     try{
-      $sql_exists = "SHOW TABLES LIKE '$tabla'";
-      $result = $this->con->prepare($sql_exists);
-      $result->execute();
-      $existe = false;
+      if($id != 'todas'){
+        $sql_exists = "SELECT id_aula FROM ". constant('todas_las_visitas') ." WHERE id_aula = '$id' ";
+        $result = $this->con->prepare($sql_exists);
+        $result->execute();
+        $existe = false;
 
-      while($row = $result->fetch(PDO::FETCH_ASSOC)){
+        while($row = $result->fetch(PDO::FETCH_ASSOC)){
+          $existe = true;
+          break;
+        }
+      }else{
         $existe = true;
-        break;
       }
-
       if($existe){
-
         try {
-          $sql = $tabla == constant('todas_las_visitas') ? "SELECT matricula, id_aula, nombre, tipo, fecha, hora, no_copias FROM " . constant('todas_las_visitas') . " ORDER BY fecha ASC" : "SELECT matricula, id_aula, nombre, tipo, fecha, hora, no_copias FROM visitas_" . $tabla . " ORDER BY fecha ASC";
+          $sql = $id == 'todas' ? "SELECT matricula, id_aula, nombre, tipo, fecha, hora, no_copias FROM ". constant('todas_las_visitas') ." ORDER BY fecha ASC" :
+          "SELECT matricula, id_aula, nombre, tipo, fecha, hora, no_copias FROM ". constant('todas_las_visitas') ." WHERE id_aula = $id ORDER BY fecha ASC";
           $ejecutar = $this->con->prepare($sql);
           $ejecutar->execute();
           $visitas = array();
