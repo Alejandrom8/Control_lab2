@@ -7,7 +7,7 @@
   define('DB', 'control');
   define('DB2', 'califica');
   define('USER', 'root');
-  define('PASSWORD', 'A_lex 123');
+  define('PASSWORD', '');
   define('CHARSET', 'utf8');
 
   //tablas
